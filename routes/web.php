@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -22,6 +23,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('products/{product}/edit', [ProductController::class, "edit"])->name('products.edit');
     Route::put('products/{product}', [ProductController::class, "update"])->name('products.update');
     Route::delete('products/{product}', [ProductController::class, "destroy"])->name('products.destroy');
+
+    Route::resource('categories', CategoryController::class);
 });
 
 require __DIR__ . '/settings.php';

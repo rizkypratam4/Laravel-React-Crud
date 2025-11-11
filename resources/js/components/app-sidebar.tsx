@@ -1,4 +1,3 @@
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -11,7 +10,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { index } from '@/routes/products';
+import { index as category } from '@/routes/categories';
+import { index as product } from '@/routes/products';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, PackageSearch } from 'lucide-react';
@@ -24,9 +24,18 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Product',
-        href: index(),
+        title: 'Master Product',
         icon: PackageSearch,
+        subItems: [
+            {
+                title: 'All Product',
+                href: product(),
+            },
+            {
+                title: 'Categories',
+                href: category(),
+            },
+        ],
     },
 ];
 
@@ -63,7 +72,6 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

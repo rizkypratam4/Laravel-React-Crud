@@ -12,6 +12,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { index } from '@/routes/products';
 import { type BreadcrumbItem } from '@/types';
+import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { CheckCircle2Icon } from 'lucide-react';
 
@@ -29,7 +30,7 @@ interface Product {
     description: string;
 }
 
-interface PageProps {
+interface PageProps extends InertiaPageProps {
     flash: {
         message?: string;
     };
@@ -37,7 +38,7 @@ interface PageProps {
 }
 
 export default function Index() {
-    const { products, flash } = usePage().props as PageProps;
+    const { products, flash } = usePage<PageProps>().props;
     const { processing, delete: destroy } = useForm();
 
     const handleDelete = (id: number, name: string) => {
