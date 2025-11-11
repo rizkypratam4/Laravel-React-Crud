@@ -73,7 +73,9 @@ export default function Edit({ product }: Props) {
                         <Input
                             placeholder="Price"
                             value={data.price}
-                            onChange={(e) => setData('price', e.target.value)}
+                            onChange={(e) =>
+                                setData('price', Number(e.target.value))
+                            }
                         ></Input>
                     </div>
                     <div className="gap-1.5">

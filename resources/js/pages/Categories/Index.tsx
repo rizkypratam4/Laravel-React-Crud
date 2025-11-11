@@ -1,21 +1,12 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { index } from '@/routes/categories';
-import { type BreadcrumbItem } from '@/types';
+import { Category, type BreadcrumbItem } from '@/types';
 import { PageProps as InertiaPageProps } from '@inertiajs/core';
+
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { AlertCircleIcon, CheckCircle2Icon } from 'lucide-react';
-import { useRef } from 'react';
+import CreateForm from './CreateForm';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -23,13 +14,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: index().url,
     },
 ];
-
-interface Category {
-    id: number;
-    name: string;
-    price: number;
-    description: string;
-}
 
 export interface PageProps extends InertiaPageProps {
     flash: {
@@ -39,116 +23,21 @@ export interface PageProps extends InertiaPageProps {
 }
 
 export default function Index() {
-    const { categories, flash } = usePage<PageProps>().props;
+    const { categories } = usePage<PageProps>().props;
     const { processing, delete: destroy } = useForm();
-    const { data, setData, post, reset, errors } = useForm({
-        name: '',
-        image_url: null as File | null,
-    });
-
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        post('/categories', {
-            onSuccess: () => {
-                reset();
-                if (fileInputRef.current) fileInputRef.current.value = '';
-            },
-            forceFormData: true,
-        });
-    };
 
     const handleDelete = (id: number, name: string) => {
         if (confirm(`Do you want to delete a product - ${id}. ${name}?`)) {
-            destroy(`products/${id}`);
+            destroy(`categories/${id}`);
         }
     };
     const getlink = (id: number) => {
         return `/categories/${id}/edit`;
     };
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="categorys" />
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
-                {Object.keys(errors).length > 0 ? (
-                    <Alert>
-                        <AlertCircleIcon />
-                        <AlertTitle>Errors!</AlertTitle>
-                        <AlertDescription>
-                            <ul>
-                                {Object.entries(errors).map(
-                                    ([key, message]) => (
-                                        <li key={key}>{message as string}</li>
-                                    ),
-                                )}
-                            </ul>
-                        </AlertDescription>
-                    </Alert>
-                ) : (
-                    <div className="m-4">
-                        {flash.message && (
-                            <Alert>
-                                <CheckCircle2Icon />
-                                <AlertTitle>Notification!</AlertTitle>
-                                <AlertDescription>
-                                    {flash.message}
-                                </AlertDescription>
-                            </Alert>
-                        )}
-                    </div>
-                )}
-                <Card className="mx-4">
-                    <CardHeader>
-                        <CardTitle>Create Category</CardTitle>
-                        <CardDescription>
-                            input your category here.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                            <div className="grid gap-3">
-                                <Label htmlFor="email">Name</Label>
-                                <Input
-                                    id="nameCategory"
-                                    type="text"
-                                    value={data.name}
-                                    onChange={(e) =>
-                                        setData('name', e.target.value)
-                                    }
-                                    placeholder="input category name"
-                                    required
-                                />
-                            </div>
-                            <div className="grid gap-3">
-                                <Label htmlFor="imageCategory">Image</Label>
-                                <Input
-                                    ref={fileInputRef}
-                                    id="imageCategory"
-                                    type="file"
-                                    onChange={(e) =>
-                                        setData(
-                                            'image_url',
-                                            e.target.files?.[0] ?? null,
-                                        )
-                                    }
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <Button
-                            size="sm"
-                            disabled={processing}
-                            type="submit"
-                            className="mt-5"
-                        >
-                            Submit
-                        </Button>
-                    </CardContent>
-                </Card>
-            </form>
-
+            <CreateForm />
             {categories.length > 0 && (
                 <div className="mx-4 my-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {categories.map((category) => (
@@ -157,8 +46,9 @@ export default function Index() {
                             className="flex flex-col items-center p-4 shadow"
                         >
                             <img
-                                src={`/storage/${category.image_url}`}
+                                src={`/storage/${category.image_url ?? ''}`}
                                 alt={category.name}
+                                loading="lazy"
                                 className="h-32 w-full rounded-md object-cover"
                             />
 
@@ -169,6 +59,7 @@ export default function Index() {
                             <div className="mt-4 flex gap-2">
                                 <Link href={getlink(category.id).toString()}>
                                     <Button
+                                        variant="outline"
                                         size="sm"
                                         className="bg-slate-600 hover:bg-slate-700"
                                     >
@@ -176,6 +67,7 @@ export default function Index() {
                                     </Button>
                                 </Link>
                                 <Button
+                                    variant="outline"
                                     size="sm"
                                     disabled={processing}
                                     onClick={() =>
