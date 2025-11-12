@@ -10,11 +10,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all()->map(function ($category) {
-            return [
-                
-            ]
-        });
+        $products = Product::all();
         return Inertia::render('Products/Index', compact('products'));
     }
 
@@ -35,14 +31,14 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('message', 'Product created successfully');
     }
 
-    public function edit(Product $product) 
+    public function edit(Product $product)
     {
         return Inertia::render('Products/Edit', compact('product'));
     }
 
     public function update(Request $request, Product $product)
     {
-         $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'description' => 'nullable|string'

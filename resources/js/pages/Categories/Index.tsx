@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { index } from '@/routes/categories';
@@ -7,6 +6,7 @@ import { PageProps as InertiaPageProps } from '@inertiajs/core';
 
 import { Head, useForm, usePage } from '@inertiajs/react';
 import CreateForm from './CreateForm';
+import DeleteBox from './DeleteBox';
 import EditForm from './EditForm';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,10 +27,8 @@ export default function Index() {
     const { categories } = usePage<PageProps>().props;
     const { processing, delete: destroy } = useForm();
 
-    const handleDelete = (id: number, name: string) => {
-        if (confirm(`Do you want to delete a product - ${id}. ${name}?`)) {
-            destroy(`categories/${id}`);
-        }
+    const handleDelete = (id: number) => {
+        destroy(`categories/${id}`);
     };
 
     return (
@@ -60,17 +58,9 @@ export default function Index() {
                                     category={category}
                                     key={category.id}
                                 />{' '}
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={processing}
-                                    onClick={() =>
-                                        handleDelete(category.id, category.name)
-                                    }
-                                    className="bg-red-600 hover:bg-red-700"
-                                >
-                                    Delete
-                                </Button>
+                                <DeleteBox
+                                    onClick={() => handleDelete(category.id)}
+                                />
                             </div>
                         </Card>
                     ))}

@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Inertia\Inertia;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+
 
 class CategoryController extends Controller
 {
@@ -17,7 +16,7 @@ class CategoryController extends Controller
         return Inertia::render('Categories/Index', compact('categories'));
     }
 
-    public function store(CategoryRequest $request): RedirectResponse
+    public function store(CategoryRequest $request)
     {
         $imageName = time() . '_' . $request->name . '.' . $request->image_url->extension();
         $imagePath = $request->image_url->storeAs('categories', $imageName, 'public');
@@ -31,7 +30,7 @@ class CategoryController extends Controller
             ->with('message', 'Category created successfully');
     }
 
-    public function update(CategoryRequest $request, Category $category): RedirectResponse
+    public function update(CategoryRequest $request, Category $category)
     {
         $data = $request->validated();
 
@@ -47,5 +46,11 @@ class CategoryController extends Controller
         $category->update($data);
 
         return redirect()->route('categories.index')->with('message', 'Category updated successfully');
+    }
+
+    public function destroy(Category $category)
+    {
+        $category->delete();
+        return redirect()->route('categories.index')->with('message', 'Category deleted successfully');
     }
 }

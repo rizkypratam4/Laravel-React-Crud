@@ -16,6 +16,15 @@ import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { CheckCircle2Icon } from 'lucide-react';
 
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Product',
@@ -51,14 +60,25 @@ export default function Index() {
     };
 
     return (
+        // https://dribbble.com/shots/25143229-Sales-Management-Dashboard-Product-List
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Products" />
-            <div className="m-4">
-                <Link href="products/create">
-                    <Button>Create Product</Button>
-                </Link>
+            <div className="m-6 flex items-center justify-between">
+                <h1 className="text-bold self-center text-2xl">Product List</h1>
+                <div className="flex gap-3">
+                    <Button size="sm">Import</Button>
+                    <Button size="sm">Export</Button>
+                    <Link href="products/create">
+                        <Button
+                            size="sm"
+                            className="bg-sky-800 text-white hover:bg-sky-900"
+                        >
+                            + Add Product
+                        </Button>
+                    </Link>
+                </div>
             </div>
-            <div className="m-4">
+            <div>
                 <div>
                     {flash.message && (
                         <Alert>
@@ -69,6 +89,16 @@ export default function Index() {
                     )}
                 </div>
             </div>
+            <Card className="mx-6">
+                <CardHeader>
+                    <CardTitle>Login to your account</CardTitle>
+                    <CardDescription>
+                        Enter your email below to login to your account
+                    </CardDescription>
+                </CardHeader>
+                <CardContent></CardContent>
+                <CardFooter className="flex-col gap-2"></CardFooter>
+            </Card>
             {products.length > 0 && (
                 <div className="m-4">
                     <Table>
