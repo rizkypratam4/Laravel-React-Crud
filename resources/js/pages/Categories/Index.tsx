@@ -5,8 +5,9 @@ import { index } from '@/routes/categories';
 import { Category, type BreadcrumbItem } from '@/types';
 import { PageProps as InertiaPageProps } from '@inertiajs/core';
 
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import CreateForm from './CreateForm';
+import EditForm from './EditForm';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,9 +32,7 @@ export default function Index() {
             destroy(`categories/${id}`);
         }
     };
-    const getlink = (id: number) => {
-        return `/categories/${id}/edit`;
-    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="categorys" />
@@ -57,15 +56,10 @@ export default function Index() {
                             </h3>
 
                             <div className="mt-4 flex gap-2">
-                                <Link href={getlink(category.id).toString()}>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="bg-slate-600 hover:bg-slate-700"
-                                    >
-                                        Edit
-                                    </Button>
-                                </Link>
+                                <EditForm
+                                    category={category}
+                                    key={category.id}
+                                />{' '}
                                 <Button
                                     variant="outline"
                                     size="sm"

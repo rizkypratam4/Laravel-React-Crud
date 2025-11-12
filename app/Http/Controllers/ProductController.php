@@ -10,7 +10,11 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::all()->map(function ($category) {
+            return [
+                
+            ]
+        });
         return Inertia::render('Products/Index', compact('products'));
     }
 

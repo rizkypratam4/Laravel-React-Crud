@@ -6,6 +6,8 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -27,5 +29,23 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index')
             ->with('message', 'Category created successfully');
+    }
+
+    public function update(CategoryRequest $request, Category $category): RedirectResponse
+    {
+        $data = $request->validated();
+
+        if ($request->hasFile('image_url')) {
+            if ($category->image_url) {
+                Storage::disk('public')->delete($category->image_url);
+            }
+            $imageName = time() . '_' . $request->name . '.' . $request->image_url->extension();
+
+            $imagePath = $request->image_url->storeAs('categories', $imageName, 'public');
+            $data['image_url'] = $imagePath;
+        }
+        $category->update($data);
+
+        return redirect()->route('categories.index')->with('message', 'Category updated successfully');
     }
 }

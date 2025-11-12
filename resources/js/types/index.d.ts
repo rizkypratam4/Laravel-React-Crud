@@ -49,5 +49,5 @@ export interface User {
 export interface Category {
     id: number;
     name: string;
-    image_url
+    image_url: string | null; 
 }
